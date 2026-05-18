@@ -1,6 +1,6 @@
 # CITADEL
 
-**CITADEL** is an AI-driven local-first blue-team security assessment toolkit for Linux and Docker environments.
+**CITADEL** is an AI-assisted local-first blue-team security assessment toolkit for Linux and Docker environments.
 
 It helps developers, students, sysadmins, and security analysts identify risky configurations, collect evidence, calculate risk scores, and generate remediation-oriented reports.
 
