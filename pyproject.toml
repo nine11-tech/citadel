@@ -1,0 +1,30 @@
+[project]
+name = "citadel-blue"
+version = "0.1.0"
+description = "Local-first Linux and Docker security assessment toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer[all]",
+    "rich",
+    "pydantic",
+    "pyyaml",
+    "requests",
+    "docker",
+    "jinja2",
+    "fastapi",
+    "uvicorn",
+    "httpx"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff"
+]
+
+[project.scripts]
+citadel = "citadel.cli:app"
+
+[tool.ruff]
+line-length = 100
