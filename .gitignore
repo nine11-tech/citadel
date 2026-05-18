@@ -7,3 +7,4 @@ __pycache__/
 reports/*.json
 reports/*.html
 reports/*.pdf
+*.egg-info/
