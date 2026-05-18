@@ -5,6 +5,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from citadel.advisor import AdvisorMode, generate_advisory
 from citadel.models import Evidence, Finding, ScanReport, Severity
 from citadel.scanners.docker import scan_docker_compose
 from citadel.scoring import calculate_summary
@@ -90,6 +91,38 @@ def scan(
             report_json = report.json(indent=2)
         json_output.write_text(f"{report_json}\n", encoding="utf-8")
         console.print(f"[bold green]JSON report written:[/bold green] {json_output}")
+
+
+@app.command()
+def advisor(
+    report_json: Path = typer.Argument(..., help="Path to a CITADEL ScanReport JSON file."),
+    mode: AdvisorMode = typer.Option(
+        AdvisorMode.OFFLINE,
+        "--mode",
+        help="Advisory mode: offline, ollama, or openai.",
+    ),
+    output: Path | None = typer.Option(
+        None,
+        "--output",
+        help="Write the advisory Markdown to this path.",
+    ),
+):
+    """Generate a risk advisory from a scan report."""
+    report_data = report_json.read_text(encoding="utf-8")
+    if hasattr(ScanReport, "model_validate_json"):
+        report = ScanReport.model_validate_json(report_data)
+    else:
+        report = ScanReport.parse_raw(report_data)
+
+    advisory_text = generate_advisory(report, mode)
+
+    if output is None:
+        console.print(advisory_text)
+        return
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(advisory_text, encoding="utf-8")
+    console.print(f"[bold green]Advisory written:[/bold green] {output}")
 
 
 if __name__ == "__main__":
