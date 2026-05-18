@@ -28,3 +28,7 @@ citadel = "citadel.cli:app"
 
 [tool.ruff]
 line-length = 100
+
+[tool.setuptools.packages.find]
+include = ["citadel*"]
+exclude = ["reports*", "examples*", "tests*"]
