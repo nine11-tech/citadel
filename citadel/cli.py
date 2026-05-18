@@ -6,6 +6,7 @@ from rich.console import Console
 from rich.table import Table
 
 from citadel.models import Evidence, Finding, ScanReport, Severity
+from citadel.scanners.docker import scan_docker_compose
 from citadel.scoring import calculate_summary
 
 app = typer.Typer(help="CITADEL - Local-first blue-team security assessment toolkit")
@@ -20,7 +21,7 @@ def version():
 
 @app.command()
 def scan(
-    target: str = ".",
+    target: str = typer.Argument("."),
     json_output: Path | None = typer.Option(
         None,
         "--json-output",
@@ -31,25 +32,27 @@ def scan(
     started_at = datetime.now()
     console.print(f"[bold green]Scanning target:[/bold green] {target}")
 
-    findings = [
-        Finding(
-            id="CIT-DEMO-001",
-            title="Demo finding for report pipeline validation",
-            description="This placeholder finding exercises CITADEL's reporting and scoring flow.",
-            severity=Severity.LOW,
-            category="configuration",
-            asset=target,
-            evidence=[
-                Evidence(
-                    source="demo",
-                    output="Scanner modules are not implemented yet.",
-                )
-            ],
-            impact="No real issue was detected. This finding is for demonstration only.",
-            remediation="Replace the demo scanner with real defensive audit checks.",
-            references=[],
-        )
-    ]
+    findings = scan_docker_compose(target)
+    if not findings:
+        findings = [
+            Finding(
+                id="CIT-DEMO-001",
+                title="Demo finding for report pipeline validation",
+                description="This placeholder finding exercises CITADEL's reporting and scoring flow.",
+                severity=Severity.LOW,
+                category="configuration",
+                asset=target,
+                evidence=[
+                    Evidence(
+                        source="demo",
+                        output="Scanner modules are not implemented yet.",
+                    )
+                ],
+                impact="No real issue was detected. This finding is for demonstration only.",
+                remediation="Replace the demo scanner with real defensive audit checks.",
+                references=[],
+            )
+        ]
     summary = calculate_summary(findings)
     finished_at = datetime.now()
 

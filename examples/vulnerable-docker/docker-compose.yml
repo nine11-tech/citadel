@@ -1,0 +1,16 @@
+services:
+  vulnerable-app:
+    image: nginx:latest
+    privileged: true
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    environment:
+      API_KEY: insecure-demo-key
+      DATABASE_PASSWORD: insecure-demo-password
+    ports:
+      - "22:22"
+      - "5432:5432"
