@@ -206,7 +206,6 @@ Planned modules:
 CITADEL is under active development.
 
 The current version includes the core data model, risk scoring, Docker Compose security scanning, JSON report export, and offline AI-assisted risk advisory generation.
-EOF
 
 ````
 
